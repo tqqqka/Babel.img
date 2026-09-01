@@ -1,0 +1,2173 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0b09">
+  <meta name="description" content="Алгоритмическая Вавилонская библиотека всех изображений 512 на 512 пикселей.">
+  <title>Вавилонская библиотека изображений</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0a0b09;
+      --surface: #10110f;
+      --surface-2: #151713;
+      --text: #f0eee5;
+      --muted: #8c8e83;
+      --line: #30332b;
+      --line-strong: #55594c;
+      --acid: #d8ff52;
+      --acid-soft: rgba(216, 255, 82, .12);
+      --danger: #ff785f;
+      --header-h: 76px;
+      --radius: 2px;
+      font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-synthesis: none;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { background: var(--bg); scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100svh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 82% 8%, rgba(216, 255, 82, .055), transparent 27rem),
+        var(--bg);
+    }
+
+    button, input, select, textarea { font: inherit; }
+
+    button { color: inherit; }
+
+    button, label[for], select { cursor: pointer; }
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible {
+      outline: 2px solid var(--acid);
+      outline-offset: 3px;
+    }
+
+    .topbar {
+      position: sticky;
+      z-index: 50;
+      top: 0;
+      min-height: var(--header-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 14px clamp(18px, 4vw, 64px);
+      border-bottom: 1px solid var(--line);
+      background: rgba(10, 11, 9, .9);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 11px;
+      min-width: max-content;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      text-align: left;
+    }
+
+    .brand-mark {
+      width: 33px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      color: var(--bg);
+      background: var(--acid);
+      clip-path: polygon(25% 6.7%, 75% 6.7%, 100% 50%, 75% 93.3%, 25% 93.3%, 0 50%);
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .brand-copy { display: grid; gap: 1px; }
+    .brand-copy strong { font-size: 12px; letter-spacing: .14em; }
+    .brand-copy small { color: var(--muted); font-size: 9px; letter-spacing: .08em; }
+
+    .topnav { display: flex; align-items: center; gap: 4px; }
+
+    .nav-button {
+      min-height: 42px;
+      border: 0;
+      padding: 0 15px;
+      color: var(--muted);
+      background: transparent;
+      font-size: 11px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .nav-button:hover, .nav-button[aria-current="page"] { color: var(--text); }
+    .nav-button[aria-current="page"] { background: var(--surface-2); }
+
+    main { min-height: calc(100svh - var(--header-h)); }
+
+    .view {
+      display: none;
+      width: min(1440px, 100%);
+      min-height: calc(100svh - var(--header-h));
+      margin: 0 auto;
+      padding: clamp(32px, 5vw, 74px) clamp(18px, 4vw, 64px) 72px;
+      animation: view-in .28s ease both;
+    }
+
+    .view.is-active { display: block; }
+
+    @keyframes view-in {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .eyebrow {
+      margin: 0 0 20px;
+      color: var(--acid);
+      font-size: 10px;
+      line-height: 1.4;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      max-width: 1050px;
+      margin-bottom: 22px;
+      font-size: clamp(42px, 7.7vw, 118px);
+      font-weight: 500;
+      line-height: .9;
+      letter-spacing: -.065em;
+    }
+
+    h2 {
+      margin-bottom: 14px;
+      font-size: clamp(29px, 4vw, 58px);
+      font-weight: 500;
+      line-height: .98;
+      letter-spacing: -.045em;
+    }
+
+    h3 { font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+
+    .lede {
+      max-width: 760px;
+      color: #b4b5aa;
+      font-size: clamp(14px, 1.5vw, 19px);
+      line-height: 1.65;
+    }
+
+    .hero-number {
+      display: inline-block;
+      color: var(--acid);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .hero-actions {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(280px, .85fr);
+      gap: 1px;
+      margin-top: clamp(38px, 7vw, 92px);
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+
+    .action-panel {
+      position: relative;
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 32px;
+      border: 0;
+      padding: clamp(24px, 4vw, 48px);
+      overflow: hidden;
+      background: var(--surface);
+      text-align: left;
+    }
+
+    .action-panel:hover { background: #141611; }
+    .action-panel--upload.is-dragging { background: var(--acid-soft); }
+
+    .action-index { color: var(--muted); font-size: 10px; }
+    .action-title { max-width: 470px; font-size: clamp(22px, 3vw, 40px); line-height: 1.08; letter-spacing: -.04em; }
+    .action-note { max-width: 450px; color: var(--muted); font-size: 11px; line-height: 1.6; }
+    .action-arrow { position: absolute; right: 30px; top: 28px; color: var(--acid); font-size: 24px; }
+
+    .button {
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border: 1px solid var(--line-strong);
+      padding: 0 20px;
+      background: transparent;
+      font-size: 11px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .button:hover { border-color: var(--text); }
+    .button--primary { border-color: var(--acid); color: #0b0c08; background: var(--acid); font-weight: 700; }
+    .button--primary:hover { border-color: #edffab; background: #edffab; }
+    .button--quiet { border-color: transparent; color: var(--muted); }
+    .button--quiet:hover { color: var(--text); border-color: var(--line); }
+    .button:disabled { opacity: .45; cursor: not-allowed; }
+
+    .section-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 28px;
+      margin-bottom: clamp(30px, 5vw, 64px);
+    }
+
+    .section-head p { max-width: 590px; margin: 0; color: var(--muted); font-size: 11px; line-height: 1.65; }
+
+    .hex-browser {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 340px);
+      gap: clamp(30px, 5vw, 76px);
+      align-items: center;
+    }
+
+    .hex-map {
+      position: relative;
+      width: min(760px, 100%);
+      aspect-ratio: 1.25;
+      margin: 0 auto;
+      isolation: isolate;
+    }
+
+    .room-universe {
+      position: relative;
+      width: 100%;
+      height: clamp(520px, 70svh, 820px);
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background:
+        radial-gradient(circle at center, rgba(216, 255, 82, .07), transparent 34%),
+        #090a08;
+      cursor: grab;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+      overscroll-behavior: contain;
+    }
+
+    .room-universe::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      background: radial-gradient(circle at center, transparent 44%, rgba(9, 10, 8, .78) 100%);
+      pointer-events: none;
+    }
+
+    .room-universe.is-dragging { cursor: grabbing; }
+
+    .universe-grid {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      display: block;
+      overflow: hidden;
+    }
+
+    .universe-node {
+      --node-size: 112px;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: var(--node-size);
+      height: calc(var(--node-size) * .866);
+      display: grid;
+      place-items: center;
+      border: 0;
+      padding: 1px;
+      color: var(--text);
+      background: #484c40;
+      clip-path: polygon(25% 6.7%, 75% 6.7%, 100% 50%, 75% 93.3%, 25% 93.3%, 0 50%);
+      will-change: transform, opacity;
+    }
+
+    .universe-node::before {
+      content: "";
+      position: absolute;
+      inset: 2px;
+      z-index: -1;
+      background: #11130f;
+      clip-path: inherit;
+    }
+
+    .universe-node:hover, .universe-node:focus-visible { z-index: 5; color: var(--acid); background: var(--acid); }
+    .universe-node.is-center { background: var(--acid); }
+    .universe-node.is-center::before { background: #1a1e12; }
+
+    .universe-node span {
+      display: block;
+      max-width: 76%;
+      overflow: hidden;
+      font-size: 8px;
+      letter-spacing: .03em;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .universe-hud {
+      position: absolute;
+      z-index: 6;
+      inset: 18px 18px auto;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 18px;
+      pointer-events: none;
+    }
+
+    .universe-status {
+      max-width: min(430px, 70%);
+      padding: 12px 14px;
+      border: 1px solid rgba(85, 89, 76, .75);
+      background: rgba(10, 11, 9, .82);
+    }
+
+    .universe-status span { display: block; margin-bottom: 5px; color: var(--muted); font-size: 8px; letter-spacing: .12em; text-transform: uppercase; }
+    .universe-status strong { display: block; overflow: hidden; font-size: 11px; font-weight: 500; text-overflow: ellipsis; white-space: nowrap; }
+    .universe-hud .button { min-height: 42px; background: rgba(10, 11, 9, .82); pointer-events: auto; }
+
+    .universe-tip {
+      position: absolute;
+      z-index: 6;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      padding: 8px 11px;
+      color: var(--muted);
+      background: rgba(10, 11, 9, .78);
+      font-size: 8px;
+      letter-spacing: .1em;
+      text-align: center;
+      text-transform: uppercase;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .hex-node {
+      --hex-fill: #10120f;
+      position: absolute;
+      width: 27%;
+      aspect-ratio: 1.13;
+      border: 0;
+      padding: 1px;
+      color: var(--text);
+      background: var(--line-strong);
+      clip-path: polygon(25% 6.7%, 75% 6.7%, 100% 50%, 75% 93.3%, 25% 93.3%, 0 50%);
+      transition: transform .18s ease, background .18s ease;
+    }
+
+    .hex-node::before {
+      content: "";
+      position: absolute;
+      inset: 2px;
+      z-index: -1;
+      background: var(--hex-fill);
+      clip-path: inherit;
+    }
+
+    .hex-node:hover { z-index: 4; background: var(--acid); transform: scale(1.035); }
+    .hex-node--center { --hex-fill: #171a13; background: var(--acid); }
+    .hex-node--center::after {
+      content: "ВЫ ЗДЕСЬ";
+      position: absolute;
+      left: 50%;
+      bottom: 19%;
+      transform: translateX(-50%);
+      color: var(--acid);
+      font-size: clamp(6px, .75vw, 9px);
+      letter-spacing: .12em;
+      white-space: nowrap;
+    }
+
+    .hex-label {
+      display: block;
+      padding: 0 12%;
+      overflow: hidden;
+      color: inherit;
+      font-size: clamp(8px, 1.15vw, 13px);
+      letter-spacing: .04em;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .hex-node[data-slot="0"] { left: 36.5%; top: 35%; }
+    .hex-node[data-slot="1"] { left: 36.5%; top: 3%; }
+    .hex-node[data-slot="2"] { left: 60%; top: 19%; }
+    .hex-node[data-slot="3"] { left: 60%; top: 51%; }
+    .hex-node[data-slot="4"] { left: 36.5%; top: 67%; }
+    .hex-node[data-slot="5"] { left: 13%; top: 51%; }
+    .hex-node[data-slot="6"] { left: 13%; top: 19%; }
+
+    .info-stack { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+    .info-block { padding: 22px; background: var(--surface); }
+    .info-block span { display: block; margin-bottom: 8px; color: var(--muted); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; }
+    .info-block strong { display: block; overflow-wrap: anywhere; font-size: 15px; font-weight: 500; line-height: 1.4; }
+    .info-block p { margin: 8px 0 0; color: var(--muted); font-size: 10px; line-height: 1.55; }
+
+    .inline-actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 18px; }
+
+    .room-shell {
+      display: grid;
+      grid-template-columns: minmax(350px, 1.2fr) minmax(320px, .8fr);
+      gap: clamp(30px, 6vw, 90px);
+      align-items: center;
+    }
+
+    .wall-ring {
+      position: relative;
+      width: min(610px, 100%);
+      aspect-ratio: 1;
+      margin: 0 auto;
+    }
+
+    .wall-ring::before, .wall-ring::after {
+      content: "";
+      position: absolute;
+      inset: 8%;
+      clip-path: polygon(25% 6.7%, 75% 6.7%, 100% 50%, 75% 93.3%, 25% 93.3%, 0 50%);
+    }
+
+    .wall-ring::before { background: var(--line-strong); }
+    .wall-ring::after { inset: calc(8% + 2px); background: var(--surface); }
+
+    .room-center {
+      position: absolute;
+      z-index: 2;
+      inset: 36%;
+      display: grid;
+      place-content: center;
+      gap: 6px;
+      text-align: center;
+    }
+
+    .room-center span { color: var(--muted); font-size: 8px; letter-spacing: .14em; }
+    .room-center strong { font-size: clamp(10px, 1.3vw, 14px); font-weight: 500; white-space: nowrap; }
+
+    .wall-button {
+      position: absolute;
+      z-index: 3;
+      width: 22%;
+      min-height: 58px;
+      border: 1px solid var(--line-strong);
+      background: #0d0e0c;
+      font-size: clamp(8px, 1vw, 11px);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      transition: border-color .16s ease, color .16s ease, background .16s ease;
+    }
+
+    .wall-button:hover { border-color: var(--text); }
+    .wall-button.is-selected { border-color: var(--acid); color: var(--acid); background: #15190f; }
+    .wall-button[data-wall="1"] { left: 39%; top: 6%; }
+    .wall-button[data-wall="2"] { right: 3%; top: 29%; transform: rotate(60deg); }
+    .wall-button[data-wall="3"] { right: 3%; bottom: 29%; transform: rotate(-60deg); }
+    .wall-button[data-wall="4"] { left: 39%; bottom: 6%; }
+    .wall-button[data-wall="5"] { left: 3%; bottom: 29%; transform: rotate(60deg); }
+    .wall-button[data-wall="6"] { left: 3%; top: 29%; transform: rotate(-60deg); }
+
+    .control-panel {
+      border: 1px solid var(--line);
+      background: var(--surface);
+      padding: clamp(22px, 3vw, 36px);
+    }
+
+    .control-panel h3 { margin-bottom: 26px; }
+    .control-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+
+    .field { display: grid; gap: 8px; }
+    .field--wide { grid-column: 1 / -1; }
+    .field label { color: var(--muted); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; }
+
+    .field input, .field select, .field textarea {
+      width: 100%;
+      min-height: 48px;
+      border: 1px solid var(--line-strong);
+      border-radius: 0;
+      padding: 0 14px;
+      color: var(--text);
+      background: #0b0c0a;
+    }
+
+    .field textarea {
+      min-height: 170px;
+      resize: vertical;
+      padding: 14px;
+      font-size: 10px;
+      line-height: 1.5;
+      word-break: break-all;
+    }
+
+    .field input::placeholder, .field textarea::placeholder { color: #55584f; }
+    .form-note { margin: 18px 0 0; color: var(--muted); font-size: 9px; line-height: 1.55; }
+
+    .page-layout {
+      display: grid;
+      grid-template-columns: minmax(300px, 650px) minmax(320px, 1fr);
+      gap: clamp(28px, 5vw, 76px);
+      align-items: start;
+    }
+
+    .canvas-frame {
+      position: relative;
+      width: min(100%, 650px);
+      aspect-ratio: 1;
+      padding: clamp(8px, 1.4vw, 16px);
+      border: 1px solid var(--line-strong);
+      background: #050505;
+    }
+
+    .canvas-frame::before {
+      content: "512 × 512 / RGB";
+      position: absolute;
+      z-index: 2;
+      left: 12px;
+      top: 12px;
+      padding: 5px 7px;
+      color: #e8e8df;
+      background: rgba(0, 0, 0, .66);
+      font-size: 8px;
+      letter-spacing: .08em;
+      pointer-events: none;
+    }
+
+    #pageCanvas { display: block; width: 100%; height: 100%; image-rendering: auto; background: #000; }
+
+    .page-meta { display: grid; gap: 24px; }
+    .page-title-row { border-top: 1px solid var(--line); padding-top: 18px; }
+    .page-title-row small { color: var(--acid); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; }
+    .page-title-row h2 { margin: 9px 0 0; overflow-wrap: anywhere; font-size: clamp(25px, 3.5vw, 52px); }
+
+    .coordinate-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 1px solid var(--line); background: var(--line); gap: 1px; }
+    .coordinate { min-width: 0; padding: 16px; background: var(--surface); }
+    .coordinate:first-child { grid-column: 1 / -1; }
+    .coordinate span { display: block; margin-bottom: 7px; color: var(--muted); font-size: 8px; letter-spacing: .13em; text-transform: uppercase; }
+    .coordinate strong { display: block; overflow: hidden; font-size: 13px; font-weight: 500; text-overflow: ellipsis; white-space: nowrap; }
+    .page-explainer { color: var(--muted); font-size: 10px; line-height: 1.65; }
+
+    .search-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 360px); gap: clamp(28px, 6vw, 80px); align-items: start; }
+    .search-card { border: 1px solid var(--line); padding: clamp(22px, 4vw, 40px); background: var(--surface); }
+    .search-side { color: var(--muted); font-size: 10px; line-height: 1.7; }
+    .search-side strong { color: var(--text); font-weight: 500; }
+    .search-side code { color: var(--acid); word-break: break-all; }
+
+    .status-line {
+      min-height: 22px;
+      margin: 15px 0 0;
+      color: var(--danger);
+      font-size: 10px;
+      line-height: 1.5;
+    }
+
+    .busy {
+      position: fixed;
+      z-index: 200;
+      inset: 0;
+      display: none;
+      place-items: center;
+      padding: 24px;
+      background: rgba(8, 9, 7, .9);
+      backdrop-filter: blur(12px);
+    }
+
+    .busy.is-visible { display: grid; }
+    .busy-card { width: min(520px, 100%); border: 1px solid var(--line-strong); padding: clamp(24px, 5vw, 46px); background: var(--surface); }
+    .busy-mark { width: 42px; height: 48px; margin-bottom: 34px; background: var(--acid); clip-path: polygon(25% 6.7%, 75% 6.7%, 100% 50%, 75% 93.3%, 25% 93.3%, 0 50%); animation: breathe 1.2s ease-in-out infinite alternate; }
+    .busy-label { margin-bottom: 13px; font-size: 13px; letter-spacing: .04em; }
+    .progress-track { height: 2px; overflow: hidden; background: var(--line); }
+    .progress-bar { width: 0; height: 100%; background: var(--acid); transition: width .18s ease; }
+    .busy-detail { margin-top: 12px; color: var(--muted); font-size: 9px; }
+
+    @keyframes breathe { to { opacity: .35; transform: rotate(60deg) scale(.92); } }
+
+    .toast {
+      position: fixed;
+      z-index: 300;
+      right: 22px;
+      bottom: 22px;
+      max-width: min(390px, calc(100vw - 36px));
+      padding: 14px 17px;
+      border: 1px solid var(--line-strong);
+      color: var(--text);
+      background: #171913;
+      font-size: 10px;
+      line-height: 1.5;
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: .2s ease;
+    }
+
+    .toast.is-visible { opacity: 1; transform: translateY(0); }
+
+    .sr-only {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+
+    @media (max-width: 900px) {
+      .hero-actions, .hex-browser, .room-shell, .page-layout, .search-layout { grid-template-columns: 1fr; }
+      .action-panel { min-height: 240px; }
+      .hex-browser { gap: 26px; }
+      .info-stack { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .info-block:last-child { grid-column: 1 / -1; }
+      .room-shell { gap: 22px; }
+      .control-panel { width: min(620px, 100%); margin: 0 auto; }
+      .page-layout { justify-items: center; }
+      .page-meta { width: min(650px, 100%); }
+    }
+
+    @media (max-width: 620px) {
+      :root { --header-h: 66px; }
+      .topbar { gap: 8px; padding: 10px 14px; }
+      .brand-copy small { display: none; }
+      .brand-copy strong { font-size: 10px; }
+      .brand-mark { width: 29px; height: 34px; }
+      .nav-button { min-height: 40px; padding: 0 9px; font-size: 0; }
+      .nav-button::before { font-size: 17px; letter-spacing: 0; }
+      .nav-button[data-nav="home"]::before { content: "⌂"; }
+      .nav-button[data-nav="library"]::before { content: "⬡"; }
+      .nav-button[data-nav="search"]::before { content: "⌕"; }
+      .view { padding: 30px 16px 56px; }
+      h1 { font-size: clamp(42px, 15.5vw, 70px); }
+      .lede { font-size: 13px; }
+      .hero-actions { margin-top: 42px; }
+      .action-panel { min-height: 220px; padding: 24px 20px; }
+      .action-title { max-width: 85%; font-size: 23px; }
+      .section-head { display: block; }
+      .section-head p { margin-top: 18px; }
+      .hex-map { width: calc(100% + 20px); margin-left: -10px; }
+      .room-universe { width: calc(100% + 32px); height: 68svh; min-height: 500px; margin-left: -16px; border-right: 0; border-left: 0; }
+      .universe-hud { inset: 12px 12px auto; }
+      .universe-status { max-width: 67%; padding: 10px 11px; }
+      .universe-hud .button { min-height: 38px; padding: 0 11px; font-size: 8px; }
+      .universe-tip { bottom: 12px; max-width: calc(100% - 24px); white-space: normal; }
+      .hex-node { width: 29%; }
+      .hex-node[data-slot="0"] { left: 35.5%; }
+      .hex-node[data-slot="1"] { left: 35.5%; }
+      .hex-node[data-slot="2"], .hex-node[data-slot="3"] { left: 60.5%; }
+      .hex-node[data-slot="4"] { left: 35.5%; }
+      .hex-node[data-slot="5"], .hex-node[data-slot="6"] { left: 10.5%; }
+      .hex-label { padding: 0 15%; font-size: 7px; }
+      .info-stack { grid-template-columns: 1fr; }
+      .info-block:last-child { grid-column: auto; }
+      .wall-ring { width: min(380px, 106%); margin-left: -3%; }
+      .wall-button { min-height: 44px; font-size: 7px; }
+      .control-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .coordinate-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .inline-actions { display: grid; grid-template-columns: 1fr; }
+      .inline-actions .button { width: 100%; }
+      .toast { right: 18px; bottom: 18px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <button class="brand" type="button" data-go="home" aria-label="На главную">
+      <span class="brand-mark">B</span>
+      <span class="brand-copy">
+        <strong>BABEL.IMG</strong>
+        <small>БИБЛИОТЕКА ВСЕХ ИЗОБРАЖЕНИЙ</small>
+      </span>
+    </button>
+    <nav class="topnav" aria-label="Главная навигация">
+      <button class="nav-button" type="button" data-nav="home" data-go="home" aria-current="page">Главная</button>
+      <button class="nav-button" type="button" data-nav="library" data-go="library">Библиотека</button>
+      <button class="nav-button" type="button" data-nav="search" data-go="search">Поиск</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="view is-active" id="view-home" aria-labelledby="home-title">
+      <p class="eyebrow">Алгоритмический архив / короткие адреса</p>
+      <h1 id="home-title">У каждого изображения есть адрес.</h1>
+      <p class="lede">Загрузите фотографию <span class="hero-number">512 × 512</span> — библиотека присвоит ей постоянный короткий адрес, который легко скопировать или написать в TikTok.</p>
+
+      <div class="hero-actions">
+        <button class="action-panel action-panel--upload" id="uploadPanel" type="button">
+          <span class="action-index">01 / ПОИСК ПО ИЗОБРАЖЕНИЮ</span>
+          <span class="action-title">Загрузить фотографию и найти её страницу</span>
+          <span class="action-note">Изображение будет обрезано по центру до квадрата и приведено к 512 × 512. Файл никуда не отправляется.</span>
+          <span class="action-arrow" aria-hidden="true">↗</span>
+        </button>
+        <button class="action-panel" id="openLibraryButton" type="button">
+          <span class="action-index">02 / ПЕРЕХОДЫ</span>
+          <span class="action-title">Открыть библиотеку</span>
+          <span class="action-note">Перемещайтесь между соседними шестиугольниками, выбирайте стену, полку, том и страницу.</span>
+          <span class="action-arrow" aria-hidden="true">→</span>
+        </button>
+      </div>
+      <input class="sr-only" id="imageInput" type="file" accept="image/*">
+    </section>
+
+    <section class="view" id="view-library" aria-labelledby="library-title">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Бесконечная карта</p>
+          <h2 id="library-title">Свайпайте между комнатами</h2>
+        </div>
+        <p>Тяните сетку пальцем или мышью в любую сторону. Нажмите на любую HEX-комнату, чтобы войти и выбрать страницу.</p>
+      </div>
+
+      <div class="room-universe" id="roomUniverse" aria-label="Перетаскиваемая карта HEX-комнат">
+        <canvas class="universe-grid" id="universeGrid" tabindex="0" aria-label="Карта HEX-комнат. Перетаскивайте её пальцем в любую сторону."></canvas>
+        <div class="universe-hud">
+          <div class="universe-status">
+            <span>Комната в центре</span>
+            <strong id="universeRoomLabel">HEX-</strong>
+          </div>
+          <button class="button" id="randomRoomButton" type="button">Случайная</button>
+        </div>
+        <div class="universe-tip">Тяните в любую сторону · нажмите на комнату, чтобы войти</div>
+      </div>
+    </section>
+
+    <section class="view" id="view-room" aria-labelledby="room-title">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Внутри шестиугольника</p>
+          <h2 id="room-title">Комната <span id="roomHeadingLabel">HEX —</span></h2>
+        </div>
+        <p>Сначала выберите одну из шести стен, затем полку, том и страницу.</p>
+      </div>
+
+      <div class="room-shell">
+        <div class="wall-ring" aria-label="Шесть стен комнаты">
+          <div class="room-center">
+            <span>КОМНАТА</span>
+            <strong id="roomCenterLabel">HEX —</strong>
+          </div>
+          <button class="wall-button is-selected" type="button" data-wall="1">Стена 1</button>
+          <button class="wall-button" type="button" data-wall="2">Стена 2</button>
+          <button class="wall-button" type="button" data-wall="3">Стена 3</button>
+          <button class="wall-button" type="button" data-wall="4">Стена 4</button>
+          <button class="wall-button" type="button" data-wall="5">Стена 5</button>
+          <button class="wall-button" type="button" data-wall="6">Стена 6</button>
+        </div>
+
+        <div class="control-panel">
+          <h3>Координаты страницы</h3>
+          <div class="control-grid">
+            <div class="field">
+              <label for="roomWallSelect">Стена</label>
+              <select id="roomWallSelect"></select>
+            </div>
+            <div class="field">
+              <label for="roomShelfSelect">Полка</label>
+              <select id="roomShelfSelect"></select>
+            </div>
+            <div class="field">
+              <label for="roomVolumeSelect">Том</label>
+              <select id="roomVolumeSelect"></select>
+            </div>
+            <div class="field">
+              <label for="roomPageSelect">Страница</label>
+              <select id="roomPageSelect"></select>
+            </div>
+          </div>
+          <div class="inline-actions">
+            <button class="button button--primary" id="openPageButton" type="button">Открыть страницу</button>
+            <button class="button" id="roomCopyButton" type="button">Копировать код комнаты</button>
+            <button class="button button--quiet" type="button" data-go="library">К переходам</button>
+          </div>
+          <p class="form-note">Код комнаты состоит ровно из 14 цифр. Полный адрес выглядит так: 22222222222222:5:4:9:327.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-page" aria-labelledby="page-title">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" id="pageKicker">Страница найдена</p>
+          <h2 id="page-title">Постоянный адрес изображения</h2>
+        </div>
+        <p>Короткий адрес стабилен для нормализованной страницы. Повторная загрузка тех же пикселей приведёт сюда же.</p>
+      </div>
+
+      <div class="page-layout">
+        <div class="canvas-frame">
+          <canvas id="pageCanvas" width="512" height="512" aria-label="Изображение страницы библиотеки"></canvas>
+        </div>
+        <div class="page-meta">
+          <div class="page-title-row">
+            <small>Адрес страницы</small>
+            <h2 id="pageRoomLabel">00000000000000:1:1:1:1</h2>
+          </div>
+          <div class="coordinate-list">
+            <div class="coordinate">
+              <span>Шестиугольник / видимая метка</span>
+              <strong id="coordHex">—</strong>
+            </div>
+            <div class="coordinate"><span>Стена</span><strong id="coordWall">—</strong></div>
+            <div class="coordinate"><span>Полка</span><strong id="coordShelf">—</strong></div>
+            <div class="coordinate"><span>Том</span><strong id="coordVolume">—</strong></div>
+            <div class="coordinate"><span>Страница</span><strong id="coordPage">—</strong></div>
+          </div>
+          <div class="inline-actions">
+            <button class="button button--primary" id="copyAddressButton" type="button">Копировать адрес</button>
+            <button class="button" id="downloadAddressButton" type="button">Скачать адрес</button>
+            <button class="button" id="downloadImageButton" type="button">Скачать страницу PNG</button>
+            <button class="button button--quiet" type="button" data-go="room">Назад в комнату</button>
+          </div>
+          <p class="page-explainer">Формат: 14 цифр комнаты:стена:полка:том:страница. Например: 22222222222222:5:4:9:327. Повторная загрузка той же картинки даст тот же адрес. Загруженная страница хранится на этом устройстве.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-search" aria-labelledby="search-title">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Переход по адресу</p>
+          <h2 id="search-title">Найти страницу по адресу</h2>
+        </div>
+        <p>Вставьте полный адрес целиком либо код комнаты и укажите четыре числовые координаты отдельно.</p>
+      </div>
+
+      <div class="search-layout">
+        <form class="search-card" id="searchForm">
+          <div class="control-grid">
+            <div class="field field--wide">
+              <label for="addressInput">Адрес или 14 цифр комнаты</label>
+              <textarea id="addressInput" spellcheck="false" autocomplete="off" placeholder="22222222222222:5:4:9:327"></textarea>
+            </div>
+            <div class="field">
+              <label for="searchWall">Стена, 1–6</label>
+              <input id="searchWall" type="number" min="1" max="6" value="1" inputmode="numeric">
+            </div>
+            <div class="field">
+              <label for="searchShelf">Полка, 1–5</label>
+              <input id="searchShelf" type="number" min="1" max="5" value="1" inputmode="numeric">
+            </div>
+            <div class="field">
+              <label for="searchVolume">Том, 1–32</label>
+              <input id="searchVolume" type="number" min="1" max="32" value="1" inputmode="numeric">
+            </div>
+            <div class="field">
+              <label for="searchPage">Страница, 1–410</label>
+              <input id="searchPage" type="number" min="1" max="410" value="1" inputmode="numeric">
+            </div>
+          </div>
+          <div class="inline-actions">
+            <button class="button button--primary" type="submit">Открыть страницу</button>
+            <button class="button" id="loadAddressFileButton" type="button">Загрузить файл адреса</button>
+          </div>
+          <input class="sr-only" id="addressFileInput" type="file" accept=".txt,.babel,text/plain">
+          <p class="status-line" id="searchStatus" role="alert"></p>
+        </form>
+
+        <aside class="search-side">
+          <h3>Формат адреса</h3>
+          <p><code>22222222222222:5:4:9:327</code></p>
+          <p><strong>HEX</strong> — первые 14 цифр. Далее идут стена, полка, том и страница.</p>
+          <p>Файл адреса, который скачивается со страницы, можно открыть здесь. Сеть и учётная запись не нужны.</p>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <div class="busy" id="busy" role="status" aria-live="polite" aria-hidden="true">
+    <div class="busy-card">
+      <div class="busy-mark" aria-hidden="true"></div>
+      <div class="busy-label" id="busyLabel">Вычисляю адрес…</div>
+      <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+      <div class="busy-detail" id="busyDetail">Всё происходит локально на устройстве</div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      // BABEL.IMG creates a stable, short local address for every normalized
+      // 512×512 RGB page. Uploaded pages are kept in this browser by address.
+      const IMAGE_SIZE = 512;
+      const RGB_LENGTH = IMAGE_SIZE * IMAGE_SIZE * 3;
+      const COORD_LENGTH = RGB_LENGTH / 2;
+      const WALLS = 6;
+      const SHELVES = 5;
+      const VOLUMES = 32;
+      const PAGES = 410;
+      const ROOM_CAPACITY = WALLS * SHELVES * VOLUMES * PAGES;
+      const FEISTEL_ROUNDS = 6;
+      const LEGACY_ADDRESS_PREFIX = "BABEL-IMG-1/";
+      const ADDRESS_ROOM_MARKER = "H2";
+      const BASE32768_START = 0x3400;
+      const SHORT_ROOM_MODULO = 100000000000000n;
+      const SHORT_ROOM_STEP_R = 1000003n;
+      const localPageCache = new Map();
+      let localPageDbPromise = null;
+
+      const state = {
+        room: null,
+        location: { wall: 1, shelf: 1, volume: 1, page: 1 },
+        lastPixels: null,
+        toastTimer: 0,
+        busy: false
+      };
+
+      const universe = {
+        originQ: 0,
+        originR: 0,
+        panX: 0,
+        panY: 0,
+        pointerId: null,
+        startX: 0,
+        startY: 0,
+        lastX: 0,
+        lastY: 0,
+        lastTime: 0,
+        velocityX: 0,
+        velocityY: 0,
+        moved: false,
+        suppressClickUntil: 0,
+        inertiaFrame: 0,
+        nodes: [],
+        width: 0,
+        height: 0,
+        size: 0,
+        dpr: 1
+      };
+
+      const $ = (selector, root = document) => root.querySelector(selector);
+      const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+
+      const views = {
+        home: $("#view-home"),
+        library: $("#view-library"),
+        room: $("#view-room"),
+        page: $("#view-page"),
+        search: $("#view-search")
+      };
+
+      const ui = {
+        imageInput: $("#imageInput"),
+        uploadPanel: $("#uploadPanel"),
+        roomUniverse: $("#roomUniverse"),
+        universeGrid: $("#universeGrid"),
+        universeRoomLabel: $("#universeRoomLabel"),
+        roomHeadingLabel: $("#roomHeadingLabel"),
+        roomCenterLabel: $("#roomCenterLabel"),
+        wallSelect: $("#roomWallSelect"),
+        shelfSelect: $("#roomShelfSelect"),
+        volumeSelect: $("#roomVolumeSelect"),
+        pageSelect: $("#roomPageSelect"),
+        pageCanvas: $("#pageCanvas"),
+        pageKicker: $("#pageKicker"),
+        pageRoomLabel: $("#pageRoomLabel"),
+        coordHex: $("#coordHex"),
+        coordWall: $("#coordWall"),
+        coordShelf: $("#coordShelf"),
+        coordVolume: $("#coordVolume"),
+        coordPage: $("#coordPage"),
+        addressInput: $("#addressInput"),
+        searchStatus: $("#searchStatus"),
+        busy: $("#busy"),
+        busyLabel: $("#busyLabel"),
+        busyDetail: $("#busyDetail"),
+        progressBar: $("#progressBar"),
+        toast: $("#toast")
+      };
+
+      function showView(name) {
+        if (!views[name]) return;
+        Object.entries(views).forEach(([key, element]) => element.classList.toggle("is-active", key === name));
+        $$("[data-nav]").forEach(button => {
+          if (button.dataset.nav === name || (name === "room" && button.dataset.nav === "library") || (name === "page" && button.dataset.nav === "library")) {
+            button.setAttribute("aria-current", "page");
+          } else {
+            button.removeAttribute("aria-current");
+          }
+        });
+        if (name === "library") renderUniverse();
+        if (name === "room") renderRoom();
+        window.scrollTo({ top: 0, behavior: "auto" });
+      }
+
+      function setBusy(visible, label = "Вычисляю адрес…", progress = 0, detail = "Всё происходит локально на устройстве") {
+        state.busy = visible;
+        ui.busy.classList.toggle("is-visible", visible);
+        ui.busy.setAttribute("aria-hidden", visible ? "false" : "true");
+        ui.busyLabel.textContent = label;
+        ui.busyDetail.textContent = detail;
+        ui.progressBar.style.width = `${Math.max(0, Math.min(1, progress)) * 100}%`;
+      }
+
+      function updateBusy(label, progress, detail) {
+        ui.busyLabel.textContent = label;
+        ui.progressBar.style.width = `${Math.max(0, Math.min(1, progress)) * 100}%`;
+        if (detail) ui.busyDetail.textContent = detail;
+      }
+
+      function toast(message) {
+        clearTimeout(state.toastTimer);
+        ui.toast.textContent = message;
+        ui.toast.classList.add("is-visible");
+        state.toastTimer = window.setTimeout(() => ui.toast.classList.remove("is-visible"), 3200);
+      }
+
+      function nextFrame() {
+        return new Promise(resolve => requestAnimationFrame(() => resolve()));
+      }
+
+      function fillSelect(select, count, label) {
+        const fragment = document.createDocumentFragment();
+        for (let i = 1; i <= count; i++) {
+          const option = document.createElement("option");
+          option.value = String(i);
+          option.textContent = `${label} ${i}`;
+          fragment.append(option);
+        }
+        select.replaceChildren(fragment);
+      }
+
+      function randomBytes(length) {
+        const bytes = new Uint8Array(length);
+        if (globalThis.crypto?.getRandomValues) {
+          for (let offset = 0; offset < length; offset += 65536) {
+            crypto.getRandomValues(bytes.subarray(offset, Math.min(offset + 65536, length)));
+          }
+          return bytes;
+        }
+        let seed = (Date.now() ^ Math.floor(Math.random() * 0xffffffff)) >>> 0;
+        for (let i = 0; i < length; i++) {
+          seed ^= seed << 13;
+          seed ^= seed >>> 17;
+          seed ^= seed << 5;
+          bytes[i] = seed & 255;
+        }
+        return bytes;
+      }
+
+      function divideSmall(bytes, divisor) {
+        const quotient = new Uint8Array(bytes.length);
+        let remainder = 0;
+        for (let i = 0; i < bytes.length; i++) {
+          const value = remainder * 256 + bytes[i];
+          const digit = Math.floor(value / divisor);
+          quotient[i] = digit;
+          remainder = value - digit * divisor;
+        }
+        return { quotient, remainder };
+      }
+
+      function multiplySmallFixed(bytes, factor, addend) {
+        const output = new Uint8Array(bytes.length);
+        let carry = addend;
+        for (let i = bytes.length - 1; i >= 0; i--) {
+          const value = bytes[i] * factor + carry;
+          output[i] = value & 255;
+          carry = Math.floor(value / 256);
+        }
+        if (carry !== 0) throw new RangeError("Код комнаты находится вне диапазона библиотеки.");
+        return output;
+      }
+
+      function splitRoom(quotient) {
+        const q = new Uint8Array(COORD_LENGTH);
+        const r = new Uint8Array(COORD_LENGTH);
+        for (let i = 0, j = 0; i < quotient.length; i += 2, j++) {
+          q[j] = quotient[i];
+          r[j] = quotient[i + 1];
+        }
+        return { q, r };
+      }
+
+      function combineRoom(room) {
+        const quotient = new Uint8Array(RGB_LENGTH);
+        for (let i = 0, j = 0; j < COORD_LENGTH; i += 2, j++) {
+          quotient[i] = room.q[j];
+          quotient[i + 1] = room.r[j];
+        }
+        return quotient;
+      }
+
+      function flattenLocation({ wall, shelf, volume, page }) {
+        return ((((wall - 1) * SHELVES + (shelf - 1)) * VOLUMES + (volume - 1)) * PAGES + (page - 1));
+      }
+
+      function expandLocation(remainder) {
+        const page = remainder % PAGES + 1;
+        remainder = Math.floor(remainder / PAGES);
+        const volume = remainder % VOLUMES + 1;
+        remainder = Math.floor(remainder / VOLUMES);
+        const shelf = remainder % SHELVES + 1;
+        remainder = Math.floor(remainder / SHELVES);
+        const wall = remainder % WALLS + 1;
+        return { wall, shelf, volume, page };
+      }
+
+      function rotl32(value, shift) {
+        return ((value << shift) | (value >>> (32 - shift))) >>> 0;
+      }
+
+      function avalanche32(value) {
+        value ^= value >>> 16;
+        value = Math.imul(value, 0x85ebca6b) >>> 0;
+        value ^= value >>> 13;
+        value = Math.imul(value, 0xc2b2ae35) >>> 0;
+        value ^= value >>> 16;
+        return value >>> 0;
+      }
+
+      function roundMask(input, round) {
+        let a = (0x243f6a88 ^ Math.imul(round + 1, 0x9e3779b9)) >>> 0;
+        let b = (0x85a308d3 ^ Math.imul(round + 3, 0x7f4a7c15)) >>> 0;
+        let c = (0x13198a2e ^ Math.imul(round + 5, 0x94d049bb)) >>> 0;
+        let d = (0x03707344 ^ Math.imul(round + 7, 0x27d4eb2d)) >>> 0;
+
+        for (let i = 0; i < input.length; i++) {
+          const value = input[i] + (i & 255);
+          a = Math.imul((a ^ value) >>> 0, 0x85ebca6b) >>> 0;
+          b = Math.imul((b + value + (a >>> 15)) >>> 0, 0xc2b2ae35) >>> 0;
+          c = (rotl32(c ^ a ^ (value << (i & 7)), 11) + b) >>> 0;
+          d = Math.imul((d ^ c ^ i) >>> 0, 0x27d4eb2d) >>> 0;
+        }
+
+        a = avalanche32(a ^ c ^ input.length);
+        b = avalanche32(b ^ d ^ round);
+        c = avalanche32(c ^ a ^ 0xa5a5a5a5);
+        d = avalanche32(d ^ b ^ 0x5a5a5a5a);
+
+        const output = new Uint8Array(input.length);
+        let word = 0;
+        let remaining = 0;
+        for (let i = 0; i < output.length; i++) {
+          if (remaining === 0) {
+            word = Math.imul(rotl32(Math.imul(b, 5) >>> 0, 7), 9) >>> 0;
+            const t = (b << 9) >>> 0;
+            c ^= a;
+            d ^= b;
+            b ^= c;
+            a ^= d;
+            c ^= t;
+            d = rotl32(d, 11);
+            a >>>= 0;
+            b >>>= 0;
+            c >>>= 0;
+            d >>>= 0;
+            remaining = 4;
+          }
+          output[i] = word & 255;
+          word >>>= 8;
+          remaining--;
+        }
+        return output;
+      }
+
+      async function permute(bytes, inverse, onProgress) {
+        if (!(bytes instanceof Uint8Array) || bytes.length !== RGB_LENGTH) {
+          throw new TypeError("Ожидалась RGB-страница 512 × 512.");
+        }
+        const half = RGB_LENGTH / 2;
+        let left = bytes.slice(0, half);
+        let right = bytes.slice(half);
+
+        if (!inverse) {
+          for (let round = 0; round < FEISTEL_ROUNDS; round++) {
+            const mask = roundMask(right, round);
+            const nextRight = new Uint8Array(half);
+            for (let i = 0; i < half; i++) nextRight[i] = left[i] ^ mask[i];
+            left = right;
+            right = nextRight;
+            onProgress?.((round + 1) / FEISTEL_ROUNDS);
+            await nextFrame();
+          }
+        } else {
+          for (let round = FEISTEL_ROUNDS - 1; round >= 0; round--) {
+            const previousRight = left;
+            const mask = roundMask(previousRight, round);
+            const previousLeft = new Uint8Array(half);
+            for (let i = 0; i < half; i++) previousLeft[i] = right[i] ^ mask[i];
+            right = previousRight;
+            left = previousLeft;
+            onProgress?.((FEISTEL_ROUNDS - round) / FEISTEL_ROUNDS);
+            await nextFrame();
+          }
+        }
+
+        const output = new Uint8Array(RGB_LENGTH);
+        output.set(left, 0);
+        output.set(right, half);
+        return output;
+      }
+
+      function hashRoom(room) {
+        return room?.code || "00000000000000";
+      }
+
+      function roomLabel(room) {
+        return hashRoom(room);
+      }
+
+      function quickRoomLabel(room) {
+        return roomLabel(room);
+      }
+
+      function normalizeRoomCode(value) {
+        let number = BigInt(String(value).replace(/\D/g, "") || "0") % SHORT_ROOM_MODULO;
+        if (number < 0n) number += SHORT_ROOM_MODULO;
+        return number.toString().padStart(14, "0");
+      }
+
+      function shortRoom(code) {
+        return { code: normalizeRoomCode(code) };
+      }
+
+      function addByteInteger(source, delta) {
+        const bytes = source.slice();
+        if (delta > 0) {
+          let carry = delta;
+          for (let i = bytes.length - 1; i >= 0 && carry; i--) {
+            const value = bytes[i] + carry;
+            bytes[i] = value & 255;
+            carry = Math.floor(value / 256);
+          }
+        } else if (delta < 0) {
+          let borrow = -delta;
+          for (let i = bytes.length - 1; i >= 0 && borrow; i--) {
+            let value = bytes[i] - (borrow & 255);
+            borrow = Math.floor(borrow / 256);
+            if (value < 0) {
+              value += 256;
+              borrow += 1;
+            }
+            bytes[i] = value;
+          }
+        }
+        return bytes;
+      }
+
+      function shiftedRoom(room, dq, dr) {
+        const start = BigInt(room?.code || "0");
+        const delta = BigInt(dq) + BigInt(dr) * SHORT_ROOM_STEP_R;
+        let value = (start + delta) % SHORT_ROOM_MODULO;
+        if (value < 0n) value += SHORT_ROOM_MODULO;
+        return shortRoom(value.toString());
+      }
+
+      function base64UrlEncode(bytes) {
+        const chunks = [];
+        const chunkSize = 0x8000;
+        for (let i = 0; i < bytes.length; i += chunkSize) {
+          chunks.push(String.fromCharCode(...bytes.subarray(i, Math.min(i + chunkSize, bytes.length))));
+        }
+        return btoa(chunks.join("")).replaceAll("+", "-").replaceAll("/", "_").replace(/=+$/g, "");
+      }
+
+      function base64UrlDecode(text, expectedLength) {
+        if (!/^[A-Za-z0-9_-]+$/.test(text)) throw new Error("Код комнаты содержит недопустимые символы.");
+        const normalized = text.replaceAll("-", "+").replaceAll("_", "/") + "=".repeat((4 - text.length % 4) % 4);
+        let binary;
+        try {
+          binary = atob(normalized);
+        } catch {
+          throw new Error("Не удалось прочитать код комнаты.");
+        }
+        if (binary.length !== expectedLength) throw new Error("Код комнаты имеет неверную длину.");
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+        return bytes;
+      }
+
+      function base32768Encode(bytes) {
+        const outputLength = Math.ceil(bytes.length * 8 / 15);
+        const codes = new Uint16Array(outputLength);
+        let buffer = 0;
+        let bits = 0;
+        let outputIndex = 0;
+        for (let i = 0; i < bytes.length; i++) {
+          buffer = (buffer << 8) | bytes[i];
+          bits += 8;
+          if (bits >= 15) {
+            bits -= 15;
+            codes[outputIndex++] = BASE32768_START + ((buffer >>> bits) & 0x7fff);
+            buffer = bits ? buffer & ((1 << bits) - 1) : 0;
+          }
+        }
+        if (bits > 0) codes[outputIndex++] = BASE32768_START + ((buffer << (15 - bits)) & 0x7fff);
+        const chunks = [];
+        const chunkSize = 0x8000;
+        for (let i = 0; i < outputIndex; i += chunkSize) {
+          chunks.push(String.fromCharCode(...codes.subarray(i, Math.min(i + chunkSize, outputIndex))));
+        }
+        return chunks.join("");
+      }
+
+      function base32768Decode(text, expectedLength) {
+        const expectedChars = Math.ceil(expectedLength * 8 / 15);
+        if (text.length !== expectedChars) throw new Error("Код комнаты имеет неверную длину.");
+        const bytes = new Uint8Array(expectedLength);
+        let buffer = 0;
+        let bits = 0;
+        let outputIndex = 0;
+        for (let i = 0; i < text.length; i++) {
+          const value = text.charCodeAt(i) - BASE32768_START;
+          if (value < 0 || value > 0x7fff) throw new Error("Код комнаты содержит недопустимые символы.");
+          buffer = (buffer << 15) | value;
+          bits += 15;
+          while (bits >= 8 && outputIndex < expectedLength) {
+            bits -= 8;
+            bytes[outputIndex++] = (buffer >>> bits) & 255;
+            buffer = bits ? buffer & ((1 << bits) - 1) : 0;
+          }
+        }
+        if (outputIndex !== expectedLength || buffer !== 0) throw new Error("Код комнаты повреждён.");
+        return bytes;
+      }
+
+      function serializeRoom(room) {
+        return roomLabel(room);
+      }
+
+      function serializeAddress(room = state.room, location = state.location) {
+        return `${serializeRoom(room)}:${location.wall}:${location.shelf}:${location.volume}:${location.page}`;
+      }
+
+      function validateLocation(location) {
+        const rules = [
+          ["wall", 1, WALLS, "Стена"],
+          ["shelf", 1, SHELVES, "Полка"],
+          ["volume", 1, VOLUMES, "Том"],
+          ["page", 1, PAGES, "Страница"]
+        ];
+        for (const [key, min, max, label] of rules) {
+          const value = Number(location[key]);
+          if (!Number.isInteger(value) || value < min || value > max) {
+            throw new Error(`${label}: допустимо число от ${min} до ${max}.`);
+          }
+          location[key] = value;
+        }
+        return location;
+      }
+
+      function parseAddress(text, fallbackLocation) {
+        let clean = text.trim().replace(/\s+/g, "");
+        if (!clean) throw new Error("Вставьте адрес или код комнаты.");
+        if (clean.startsWith("HEX:")) clean = clean.slice(4);
+
+        const parts = clean.split(":");
+        const roomPart = parts.shift();
+        if (!/^\d{14}$/.test(roomPart)) throw new Error("Код комнаты должен содержать ровно 14 цифр.");
+        const room = shortRoom(roomPart);
+
+        let location;
+        if (parts.length === 0) {
+          location = { ...fallbackLocation };
+        } else if (parts.length === 4) {
+          location = { wall: Number(parts[0]), shelf: Number(parts[1]), volume: Number(parts[2]), page: Number(parts[3]) };
+        } else {
+          throw new Error("После кода комнаты укажите: стена:полка:том:страница.");
+        }
+        validateLocation(location);
+        return { room, location };
+      }
+
+      function makeRandomLocation() {
+        const seed = randomBytes(8);
+        let value = 0n;
+        for (const byte of seed) value = (value << 8n) | BigInt(byte);
+        state.room = shortRoom((value % SHORT_ROOM_MODULO).toString());
+        state.location = {
+          wall: seed[0] % WALLS + 1,
+          shelf: seed[1] % SHELVES + 1,
+          volume: seed[2] % VOLUMES + 1,
+          page: ((seed[3] << 8) | seed[4]) % PAGES + 1
+        };
+        resetUniversePosition();
+      }
+
+      function resetUniversePosition() {
+        universe.originQ = 0;
+        universe.originR = 0;
+        universe.panX = 0;
+        universe.panY = 0;
+        universe.velocityX = 0;
+        universe.velocityY = 0;
+        cancelAnimationFrame(universe.inertiaFrame);
+        universe.inertiaFrame = 0;
+      }
+
+      function universeGeometry() {
+        const width = ui.roomUniverse?.clientWidth || window.innerWidth || 900;
+        const height = ui.roomUniverse?.clientHeight || Math.min(window.innerHeight * .7, 820) || 620;
+        const size = width < 620 ? 47 : Math.min(68, Math.max(54, width / 17));
+        return { width, height, size, nodeSize: size * 2 };
+      }
+
+      function axialToPixel(q, r, size) {
+        return {
+          x: size * 1.5 * q,
+          y: size * Math.sqrt(3) * (r + q / 2)
+        };
+      }
+
+      function roundAxial(q, r) {
+        let x = q;
+        let z = r;
+        let y = -x - z;
+        let rx = Math.round(x);
+        let ry = Math.round(y);
+        let rz = Math.round(z);
+        const dx = Math.abs(rx - x);
+        const dy = Math.abs(ry - y);
+        const dz = Math.abs(rz - z);
+        if (dx > dy && dx > dz) rx = -ry - rz;
+        else if (dy > dz) ry = -rx - rz;
+        else rz = -rx - ry;
+        return { q: rx, r: rz };
+      }
+
+      function pixelToAxial(x, y, size) {
+        return roundAxial((2 / 3 * x) / size, (-x / 3 + Math.sqrt(3) * y / 3) / size);
+      }
+
+      function refreshUniverseRooms() {
+        if (!state.room) return;
+        for (const node of universe.nodes) {
+          const room = shiftedRoom(state.room, universe.originQ + node.q, universe.originR + node.r);
+          node.room = room;
+          node.label = quickRoomLabel(room);
+        }
+        const centerRoom = shiftedRoom(state.room, universe.originQ, universe.originR);
+        ui.universeRoomLabel.textContent = quickRoomLabel(centerRoom);
+        drawUniverse();
+      }
+
+      function traceHexagon(context, x, y, radius) {
+        context.beginPath();
+        for (let corner = 0; corner < 6; corner++) {
+          const angle = corner * Math.PI / 3;
+          const px = x + Math.cos(angle) * radius;
+          const py = y + Math.sin(angle) * radius;
+          if (corner === 0) context.moveTo(px, py);
+          else context.lineTo(px, py);
+        }
+        context.closePath();
+      }
+
+      function drawUniverse() {
+        const canvas = ui.universeGrid;
+        if (!canvas || !universe.width || !universe.height) return;
+        const context = canvas.getContext("2d", { alpha: true });
+        if (!context) return;
+        const { width, height, size, dpr } = universe;
+        context.setTransform(dpr, 0, 0, dpr, 0, 0);
+        context.clearRect(0, 0, width, height);
+        context.textAlign = "center";
+        context.textBaseline = "middle";
+
+        const radiusX = Math.max(width * .62, 1);
+        const radiusY = Math.max(height * .62, 1);
+        for (const node of universe.nodes) {
+          const offsetX = node.baseX + universe.panX;
+          const offsetY = node.baseY + universe.panY;
+          const x = width / 2 + offsetX;
+          const y = height / 2 + offsetY;
+          const distance = Math.sqrt((offsetX / radiusX) ** 2 + (offsetY / radiusY) ** 2);
+          const scale = Math.max(.54, Math.min(1.04, 1.04 - distance * .22));
+          const opacity = Math.max(.16, Math.min(1, 1.04 - distance * .32));
+          const radius = Math.max(8, (size - 2.2) * scale);
+          const isCenter = node.q === 0 && node.r === 0;
+
+          context.globalAlpha = opacity;
+          traceHexagon(context, x, y, radius);
+          context.fillStyle = isCenter ? "#1a1e12" : "#11130f";
+          context.fill();
+          context.lineWidth = isCenter ? 2 : 1;
+          context.strokeStyle = isCenter ? "#d8ff52" : "rgba(240, 243, 232, .31)";
+          context.stroke();
+
+          if (opacity > .32) {
+            context.fillStyle = isCenter ? "#d8ff52" : "rgba(240, 243, 232, .82)";
+            context.font = `${Math.max(6.5, 7.7 * scale)}px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace`;
+            context.fillText(node.label, x, y, radius * 1.45);
+          }
+        }
+        context.globalAlpha = 1;
+      }
+
+      function layoutUniverseNodes() {
+        drawUniverse();
+      }
+
+      function buildUniverseNodes() {
+        const { width, height, size, nodeSize } = universeGeometry();
+        const qRange = Math.ceil(width / (size * 3)) + 6;
+        const rRange = Math.ceil(height / (size * Math.sqrt(3) * 2)) + qRange + 4;
+        const margin = nodeSize * 2.2;
+        const nodes = [];
+        for (let q = -qRange; q <= qRange; q++) {
+          for (let r = -rRange; r <= rRange; r++) {
+            const point = axialToPixel(q, r, size);
+            if (Math.abs(point.x) > width / 2 + margin || Math.abs(point.y) > height / 2 + margin) continue;
+            nodes.push({ q, r, baseX: point.x, baseY: point.y, label: "", room: null });
+          }
+        }
+        nodes.sort((a, b) => {
+          const distanceA = a.baseX * a.baseX + a.baseY * a.baseY;
+          const distanceB = b.baseX * b.baseX + b.baseY * b.baseY;
+          return distanceB - distanceA;
+        });
+        const dpr = width < 620 ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
+        universe.width = width;
+        universe.height = height;
+        universe.size = size;
+        universe.dpr = dpr;
+        universe.nodes = nodes;
+        ui.universeGrid.width = Math.round(width * dpr);
+        ui.universeGrid.height = Math.round(height * dpr);
+        refreshUniverseRooms();
+      }
+
+      function universeRoomAt(clientX, clientY) {
+        if (!state.room || !universe.size) return null;
+        const bounds = ui.universeGrid.getBoundingClientRect();
+        const x = clientX - bounds.left - universe.width / 2 - universe.panX;
+        const y = clientY - bounds.top - universe.height / 2 - universe.panY;
+        const cell = pixelToAxial(x, y, universe.size);
+        return shiftedRoom(state.room, universe.originQ + cell.q, universe.originR + cell.r);
+      }
+
+      function enterUniverseRoom(room) {
+        if (!room) return;
+        state.room = room;
+        state.location = { wall: 1, shelf: 1, volume: 1, page: 1 };
+        resetUniversePosition();
+        showView("room");
+      }
+
+      function recenterUniverse() {
+        const { size } = universeGeometry();
+        const shift = pixelToAxial(-universe.panX, -universe.panY, size);
+        if (shift.q === 0 && shift.r === 0) return;
+        universe.originQ += shift.q;
+        universe.originR += shift.r;
+        const correction = axialToPixel(shift.q, shift.r, size);
+        universe.panX += correction.x;
+        universe.panY += correction.y;
+        refreshUniverseRooms();
+      }
+
+      function renderUniverse() {
+        if (!state.room) makeRandomLocation();
+        if (!ui.roomUniverse || !ui.universeGrid) return;
+        buildUniverseNodes();
+      }
+
+      function syncWallControls(wall) {
+        ui.wallSelect.value = String(wall);
+        $$(".wall-button").forEach(button => button.classList.toggle("is-selected", Number(button.dataset.wall) === wall));
+      }
+
+      function renderRoom() {
+        if (!state.room) makeRandomLocation();
+        const label = roomLabel(state.room);
+        ui.roomHeadingLabel.textContent = label;
+        ui.roomCenterLabel.textContent = label;
+        ui.wallSelect.value = String(state.location.wall);
+        ui.shelfSelect.value = String(state.location.shelf);
+        ui.volumeSelect.value = String(state.location.volume);
+        ui.pageSelect.value = String(state.location.page);
+        syncWallControls(state.location.wall);
+      }
+
+      function renderPixels(bytes) {
+        const context = ui.pageCanvas.getContext("2d", { alpha: false });
+        const imageData = context.createImageData(IMAGE_SIZE, IMAGE_SIZE);
+        const rgba = imageData.data;
+        for (let source = 0, target = 0; source < bytes.length; source += 3, target += 4) {
+          rgba[target] = bytes[source];
+          rgba[target + 1] = bytes[source + 1];
+          rgba[target + 2] = bytes[source + 2];
+          rgba[target + 3] = 255;
+        }
+        context.putImageData(imageData, 0, 0);
+        state.lastPixels = bytes.slice();
+      }
+
+      function identifyPixels(bytes) {
+        if (!(bytes instanceof Uint8Array) || bytes.length !== RGB_LENGTH) {
+          throw new TypeError("Ожидалась RGB-страница 512 × 512.");
+        }
+        let a = 0x243f6a88;
+        let b = 0x85a308d3;
+        let c = 0x13198a2e;
+        let d = 0x03707344;
+        for (let i = 0; i < bytes.length; i++) {
+          const value = bytes[i] + (i & 255);
+          a = Math.imul(a ^ value, 0x9e3779b1) >>> 0;
+          b = Math.imul((b + value + (a >>> 17)) >>> 0, 0x85ebca6b) >>> 0;
+          c = rotl32((c ^ value ^ b) >>> 0, 13);
+          d = Math.imul((d ^ c ^ i) >>> 0, 0xc2b2ae35) >>> 0;
+        }
+        a = avalanche32(a ^ c ^ bytes.length);
+        b = avalanche32(b ^ d ^ 0x9e3779b9);
+        c = avalanche32(c ^ a ^ 0xa5a5a5a5);
+        d = avalanche32(d ^ b ^ 0x5a5a5a5a);
+        const roomValue = ((BigInt(a) << 32n) | BigInt(b)) % SHORT_ROOM_MODULO;
+        const locationValue = Number(((BigInt(c) << 32n) | BigInt(d)) % BigInt(ROOM_CAPACITY));
+        return {
+          room: shortRoom(roomValue.toString()),
+          location: expandLocation(locationValue)
+        };
+      }
+
+      function seedFromText(text) {
+        let a = 0x243f6a88;
+        let b = 0x85a308d3;
+        let c = 0x13198a2e;
+        let d = 0x03707344;
+        for (let i = 0; i < text.length; i++) {
+          const value = text.charCodeAt(i);
+          a = Math.imul(a ^ value, 0x9e3779b1) >>> 0;
+          b = Math.imul(b ^ value, 0x85ebca6b) >>> 0;
+          c = Math.imul(c ^ value, 0xc2b2ae35) >>> 0;
+          d = Math.imul(d ^ value, 0x27d4eb2d) >>> 0;
+        }
+        return [avalanche32(a ^ d), avalanche32(b ^ a), avalanche32(c ^ b), avalanche32(d ^ c)];
+      }
+
+      function generatePagePixels(address) {
+        let [a, b, c, d] = seedFromText(address);
+        const output = new Uint8Array(RGB_LENGTH);
+        for (let i = 0; i < output.length; i += 4) {
+          const word = Math.imul(rotl32(Math.imul(b, 5) >>> 0, 7), 9) >>> 0;
+          const t = (b << 9) >>> 0;
+          c ^= a;
+          d ^= b;
+          b ^= c;
+          a ^= d;
+          c ^= t;
+          d = rotl32(d >>> 0, 11);
+          a >>>= 0;
+          b >>>= 0;
+          c >>>= 0;
+          output[i] = word & 255;
+          if (i + 1 < output.length) output[i + 1] = word >>> 8 & 255;
+          if (i + 2 < output.length) output[i + 2] = word >>> 16 & 255;
+          if (i + 3 < output.length) output[i + 3] = word >>> 24 & 255;
+        }
+        return output;
+      }
+
+      function openLocalPageDb() {
+        if (localPageDbPromise) return localPageDbPromise;
+        if (!("indexedDB" in window)) return Promise.resolve(null);
+        localPageDbPromise = new Promise(resolve => {
+          let request;
+          try {
+            request = indexedDB.open("babel-img-short-v1", 1);
+          } catch {
+            resolve(null);
+            return;
+          }
+          request.onupgradeneeded = () => {
+            const db = request.result;
+            if (!db.objectStoreNames.contains("pages")) db.createObjectStore("pages", { keyPath: "address" });
+          };
+          request.onsuccess = () => resolve(request.result);
+          request.onerror = () => resolve(null);
+          request.onblocked = () => resolve(null);
+        });
+        return localPageDbPromise;
+      }
+
+      async function saveLocalPage(address, pixels) {
+        const copy = pixels.slice();
+        localPageCache.set(address, copy);
+        const db = await openLocalPageDb();
+        if (!db) return false;
+        return new Promise(resolve => {
+          try {
+            const transaction = db.transaction("pages", "readwrite");
+            transaction.objectStore("pages").put({ address, pixels: copy, savedAt: Date.now() });
+            transaction.oncomplete = () => resolve(true);
+            transaction.onerror = () => resolve(false);
+            transaction.onabort = () => resolve(false);
+          } catch {
+            resolve(false);
+          }
+        });
+      }
+
+      async function loadLocalPage(address) {
+        const cached = localPageCache.get(address);
+        if (cached) return cached.slice();
+        const db = await openLocalPageDb();
+        if (!db) return null;
+        return new Promise(resolve => {
+          try {
+            const request = db.transaction("pages", "readonly").objectStore("pages").get(address);
+            request.onsuccess = () => {
+              const stored = request.result?.pixels;
+              if (!stored) {
+                resolve(null);
+                return;
+              }
+              const pixels = stored instanceof Uint8Array ? stored : new Uint8Array(stored);
+              localPageCache.set(address, pixels.slice());
+              resolve(pixels);
+            };
+            request.onerror = () => resolve(null);
+          } catch {
+            resolve(null);
+          }
+        });
+      }
+
+      function updatePageMetadata(sourceLabel) {
+        const label = roomLabel(state.room);
+        ui.pageKicker.textContent = sourceLabel;
+        ui.pageRoomLabel.textContent = serializeAddress();
+        ui.coordHex.textContent = label;
+        ui.coordWall.textContent = state.location.wall;
+        ui.coordShelf.textContent = state.location.shelf;
+        ui.coordVolume.textContent = state.location.volume;
+        ui.coordPage.textContent = state.location.page;
+      }
+
+      async function openCurrentPage() {
+        if (state.busy) return;
+        try {
+          state.location = validateLocation({
+            wall: Number(ui.wallSelect.value),
+            shelf: Number(ui.shelfSelect.value),
+            volume: Number(ui.volumeSelect.value),
+            page: Number(ui.pageSelect.value)
+          });
+          setBusy(true, "Открываю страницу…", .12, "Ищу страницу по короткому адресу");
+          await nextFrame();
+          const address = serializeAddress();
+          const pixels = await loadLocalPage(address) || generatePagePixels(address);
+          renderPixels(pixels);
+          updatePageMetadata("Страница открыта");
+          setBusy(false);
+          showView("page");
+        } catch (error) {
+          setBusy(false);
+          toast(error.message || "Не удалось открыть страницу.");
+        }
+      }
+
+      async function decodeImage(file) {
+        if (!file || !file.type.startsWith("image/")) throw new Error("Выберите файл изображения.");
+        let source;
+        let revoke = null;
+        try {
+          if ("createImageBitmap" in window) {
+            try {
+              source = await createImageBitmap(file, { imageOrientation: "from-image" });
+            } catch {
+              source = await createImageBitmap(file);
+            }
+          } else {
+            const url = URL.createObjectURL(file);
+            revoke = () => URL.revokeObjectURL(url);
+            source = await new Promise((resolve, reject) => {
+              const image = new Image();
+              image.onload = () => resolve(image);
+              image.onerror = () => reject(new Error("Формат изображения не поддерживается браузером."));
+              image.src = url;
+            });
+          }
+
+          const width = source.width || source.naturalWidth;
+          const height = source.height || source.naturalHeight;
+          if (!width || !height) throw new Error("Изображение имеет нулевой размер.");
+          const side = Math.min(width, height);
+          const sx = (width - side) / 2;
+          const sy = (height - side) / 2;
+          const canvas = document.createElement("canvas");
+          canvas.width = IMAGE_SIZE;
+          canvas.height = IMAGE_SIZE;
+          const context = canvas.getContext("2d", { alpha: false, willReadFrequently: true });
+          context.fillStyle = "#000";
+          context.fillRect(0, 0, IMAGE_SIZE, IMAGE_SIZE);
+          context.imageSmoothingEnabled = true;
+          context.imageSmoothingQuality = "high";
+          context.drawImage(source, sx, sy, side, side, 0, 0, IMAGE_SIZE, IMAGE_SIZE);
+          const rgba = context.getImageData(0, 0, IMAGE_SIZE, IMAGE_SIZE).data;
+          const rgb = new Uint8Array(RGB_LENGTH);
+          for (let sourceIndex = 0, targetIndex = 0; sourceIndex < rgba.length; sourceIndex += 4) {
+            rgb[targetIndex++] = rgba[sourceIndex];
+            rgb[targetIndex++] = rgba[sourceIndex + 1];
+            rgb[targetIndex++] = rgba[sourceIndex + 2];
+          }
+          return rgb;
+        } finally {
+          source?.close?.();
+          revoke?.();
+        }
+      }
+
+      async function locateImage(file) {
+        if (state.busy) return;
+        try {
+          setBusy(true, "Подготавливаю изображение…", .03, "Обрезаю по центру и уменьшаю до 512 × 512");
+          await nextFrame();
+          const pixels = await decodeImage(file);
+          updateBusy("Вычисляю короткий адрес…", .42, "14 цифр комнаты и четыре координаты");
+          await nextFrame();
+          const identity = identifyPixels(pixels);
+          state.room = identity.room;
+          state.location = identity.location;
+          resetUniversePosition();
+          updateBusy("Запоминаю страницу…", .78, "Повторная загрузка откроет тот же адрес");
+          await saveLocalPage(serializeAddress(), pixels);
+          renderPixels(pixels);
+          updatePageMetadata("Изображение найдено");
+          updateBusy("Страница найдена", 1, roomLabel(state.room));
+          await new Promise(resolve => setTimeout(resolve, 220));
+          setBusy(false);
+          showView("page");
+        } catch (error) {
+          setBusy(false);
+          toast(error.message || "Не удалось прочитать изображение.");
+        } finally {
+          ui.imageInput.value = "";
+        }
+      }
+
+      function legacyCopyText(text) {
+        try {
+          const area = document.createElement("textarea");
+          area.value = text;
+          area.readOnly = true;
+          area.setAttribute("aria-hidden", "true");
+          area.style.position = "fixed";
+          area.style.left = "0";
+          area.style.top = "0";
+          area.style.width = "2px";
+          area.style.height = "2px";
+          area.style.padding = "0";
+          area.style.border = "0";
+          area.style.opacity = ".01";
+          area.style.fontSize = "16px";
+          area.style.pointerEvents = "none";
+          document.body.append(area);
+          try {
+            area.focus({ preventScroll: true });
+          } catch {
+            area.focus();
+          }
+          area.setSelectionRange(0, text.length);
+          const copied = Boolean(document.execCommand?.("copy"));
+          area.remove();
+          return copied;
+        } catch {
+          return false;
+        }
+      }
+
+      async function copyText(text) {
+        // This synchronous path keeps the original tap active on local files and
+        // Android WebViews. Awaiting a frame first was the cause of the old error.
+        if (legacyCopyText(text)) return;
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(text);
+          return;
+        }
+        throw new Error("Телефон запретил доступ к буферу обмена.");
+      }
+
+      function downloadText(text, filename) {
+        const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const anchor = document.createElement("a");
+        anchor.href = url;
+        anchor.download = filename;
+        document.body.append(anchor);
+        anchor.click();
+        anchor.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }
+
+      async function copyAddress(roomOnly = false) {
+        if (state.busy || !state.room) return;
+        let text = "";
+        try {
+          setBusy(true, "Собираю короткий код…", .35, "Только цифры и двоеточия");
+          text = roomOnly ? serializeRoom(state.room) : serializeAddress();
+          updateBusy("Копирую…", .8);
+          await copyText(text);
+          setBusy(false);
+          toast(roomOnly ? "Код комнаты скопирован." : "Адрес страницы скопирован.");
+        } catch (error) {
+          setBusy(false);
+          if (text) {
+            const hash = hashRoom(state.room).slice(0, 12).toLowerCase();
+            downloadText(text, roomOnly ? `babel-room-${hash}.txt` : `babel-${hash}.txt`);
+            toast("Буфер телефона недоступен — адрес сохранён файлом.");
+          } else {
+            toast(error.message || "Не удалось скопировать адрес.");
+          }
+        }
+      }
+
+      async function searchAddress(event) {
+        event.preventDefault();
+        if (state.busy) return;
+        ui.searchStatus.textContent = "";
+        try {
+          setBusy(true, "Читаю адрес…", .08, "Проверяю код комнаты и координаты");
+          await nextFrame();
+          const fallbackLocation = {
+            wall: Number($("#searchWall").value),
+            shelf: Number($("#searchShelf").value),
+            volume: Number($("#searchVolume").value),
+            page: Number($("#searchPage").value)
+          };
+          const parsed = parseAddress(ui.addressInput.value, fallbackLocation);
+          state.room = parsed.room;
+          state.location = parsed.location;
+          resetUniversePosition();
+          updateBusy("Открываю страницу…", .45, "Ищу короткий адрес в локальной библиотеке");
+          const address = serializeAddress();
+          const pixels = await loadLocalPage(address) || generatePagePixels(address);
+          renderPixels(pixels);
+          updatePageMetadata("Адрес найден");
+          setBusy(false);
+          showView("page");
+        } catch (error) {
+          setBusy(false);
+          ui.searchStatus.textContent = error.message || "Адрес не распознан.";
+        }
+      }
+
+      function moveUniverseBy(dx, dy) {
+        universe.panX += dx;
+        universe.panY += dy;
+        recenterUniverse();
+        layoutUniverseNodes();
+      }
+
+      function stopUniverseInertia() {
+        cancelAnimationFrame(universe.inertiaFrame);
+        universe.inertiaFrame = 0;
+      }
+
+      function startUniverseInertia() {
+        stopUniverseInertia();
+        let previousTime = performance.now();
+        const animate = now => {
+          const elapsed = Math.min(32, Math.max(1, now - previousTime));
+          previousTime = now;
+          moveUniverseBy(universe.velocityX * elapsed, universe.velocityY * elapsed);
+          const damping = Math.pow(.91, elapsed / 16.67);
+          universe.velocityX *= damping;
+          universe.velocityY *= damping;
+          if (Math.hypot(universe.velocityX, universe.velocityY) > .018) {
+            universe.inertiaFrame = requestAnimationFrame(animate);
+          } else {
+            universe.inertiaFrame = 0;
+          }
+        };
+        if (Math.hypot(universe.velocityX, universe.velocityY) > .035) {
+          universe.inertiaFrame = requestAnimationFrame(animate);
+        }
+      }
+
+      function bindUniverseGestures() {
+        const surface = ui.roomUniverse;
+        if (!surface) return;
+
+        surface.addEventListener("pointerdown", event => {
+          if (event.button !== undefined && event.button !== 0) return;
+          if (event.target.closest?.(".universe-hud .button")) return;
+          stopUniverseInertia();
+          universe.pointerId = event.pointerId;
+          universe.startX = universe.lastX = event.clientX;
+          universe.startY = universe.lastY = event.clientY;
+          universe.lastTime = performance.now();
+          universe.velocityX = 0;
+          universe.velocityY = 0;
+          universe.moved = false;
+          surface.classList.add("is-dragging");
+          surface.setPointerCapture?.(event.pointerId);
+        });
+
+        surface.addEventListener("pointermove", event => {
+          if (universe.pointerId !== event.pointerId) return;
+          const now = performance.now();
+          const dx = event.clientX - universe.lastX;
+          const dy = event.clientY - universe.lastY;
+          const elapsed = Math.max(1, now - universe.lastTime);
+          if (Math.hypot(event.clientX - universe.startX, event.clientY - universe.startY) > 7) universe.moved = true;
+          universe.velocityX = universe.velocityX * .62 + dx / elapsed * .38;
+          universe.velocityY = universe.velocityY * .62 + dy / elapsed * .38;
+          universe.lastX = event.clientX;
+          universe.lastY = event.clientY;
+          universe.lastTime = now;
+          moveUniverseBy(dx, dy);
+        });
+
+        const finishPointer = event => {
+          if (universe.pointerId !== event.pointerId) return;
+          try {
+            surface.releasePointerCapture?.(event.pointerId);
+          } catch {
+            // Some Android WebViews release capture before pointercancel.
+          }
+          surface.classList.remove("is-dragging");
+          universe.pointerId = null;
+          if (universe.moved) {
+            universe.suppressClickUntil = performance.now() + 240;
+            startUniverseInertia();
+          } else if (event.type !== "pointercancel") {
+            universe.suppressClickUntil = performance.now() + 240;
+            enterUniverseRoom(universeRoomAt(event.clientX, event.clientY));
+          }
+        };
+        surface.addEventListener("pointerup", finishPointer);
+        surface.addEventListener("pointercancel", finishPointer);
+
+        surface.addEventListener("wheel", event => {
+          event.preventDefault();
+          stopUniverseInertia();
+          moveUniverseBy(-event.deltaX, -event.deltaY);
+        }, { passive: false });
+
+        ui.universeGrid.addEventListener("keydown", event => {
+          const step = universe.size || 54;
+          if (event.key === "ArrowLeft") moveUniverseBy(step, 0);
+          else if (event.key === "ArrowRight") moveUniverseBy(-step, 0);
+          else if (event.key === "ArrowUp") moveUniverseBy(0, step);
+          else if (event.key === "ArrowDown") moveUniverseBy(0, -step);
+          else if (event.key === "Enter" || event.key === " ") {
+            enterUniverseRoom(shiftedRoom(state.room, universe.originQ, universe.originR));
+          } else {
+            return;
+          }
+          event.preventDefault();
+        });
+
+        let resizeFrame = 0;
+        window.addEventListener("resize", () => {
+          cancelAnimationFrame(resizeFrame);
+          resizeFrame = requestAnimationFrame(() => {
+            if (views.library.classList.contains("is-active")) buildUniverseNodes();
+          });
+        });
+      }
+
+      function bindEvents() {
+        $$('[data-go]').forEach(button => button.addEventListener("click", () => showView(button.dataset.go)));
+        $("#openLibraryButton").addEventListener("click", () => showView("library"));
+        ui.uploadPanel.addEventListener("click", () => ui.imageInput.click());
+        ui.imageInput.addEventListener("change", () => locateImage(ui.imageInput.files[0]));
+
+        ["dragenter", "dragover"].forEach(type => ui.uploadPanel.addEventListener(type, event => {
+          event.preventDefault();
+          ui.uploadPanel.classList.add("is-dragging");
+        }));
+        ["dragleave", "drop"].forEach(type => ui.uploadPanel.addEventListener(type, event => {
+          event.preventDefault();
+          ui.uploadPanel.classList.remove("is-dragging");
+        }));
+        ui.uploadPanel.addEventListener("drop", event => locateImage(event.dataTransfer.files[0]));
+
+        $("#randomRoomButton").addEventListener("click", () => {
+          makeRandomLocation();
+          renderUniverse();
+        });
+
+        bindUniverseGestures();
+
+        $$(".wall-button").forEach(button => button.addEventListener("click", () => {
+          state.location.wall = Number(button.dataset.wall);
+          syncWallControls(state.location.wall);
+        }));
+        ui.wallSelect.addEventListener("change", () => {
+          state.location.wall = Number(ui.wallSelect.value);
+          syncWallControls(state.location.wall);
+        });
+        ui.shelfSelect.addEventListener("change", () => state.location.shelf = Number(ui.shelfSelect.value));
+        ui.volumeSelect.addEventListener("change", () => state.location.volume = Number(ui.volumeSelect.value));
+        ui.pageSelect.addEventListener("change", () => state.location.page = Number(ui.pageSelect.value));
+
+        $("#openPageButton").addEventListener("click", openCurrentPage);
+        $("#roomCopyButton").addEventListener("click", () => copyAddress(true));
+        $("#copyAddressButton").addEventListener("click", () => copyAddress(false));
+        $("#downloadAddressButton").addEventListener("click", () => {
+          try {
+            const hash = hashRoom(state.room).slice(0, 12).toLowerCase();
+            downloadText(serializeAddress(), `babel-${hash}.txt`);
+            toast("Файл короткого адреса сохранён.");
+          } catch (error) {
+            toast(error.message || "Не удалось сохранить адрес.");
+          }
+        });
+        $("#downloadImageButton").addEventListener("click", () => {
+          const anchor = document.createElement("a");
+          anchor.download = `babel-page-${hashRoom(state.room).slice(0, 12).toLowerCase()}.png`;
+          anchor.href = ui.pageCanvas.toDataURL("image/png");
+          document.body.append(anchor);
+          anchor.click();
+          anchor.remove();
+        });
+
+        $("#searchForm").addEventListener("submit", searchAddress);
+        $("#loadAddressFileButton").addEventListener("click", () => $("#addressFileInput").click());
+        $("#addressFileInput").addEventListener("change", async event => {
+          const file = event.target.files[0];
+          if (!file) return;
+          try {
+            ui.addressInput.value = await file.text();
+            ui.searchStatus.textContent = "Файл загружен. Нажмите «Открыть страницу».";
+          } catch {
+            ui.searchStatus.textContent = "Не удалось прочитать файл адреса.";
+          }
+          event.target.value = "";
+        });
+      }
+
+      function init() {
+        fillSelect(ui.wallSelect, WALLS, "Стена");
+        fillSelect(ui.shelfSelect, SHELVES, "Полка");
+        fillSelect(ui.volumeSelect, VOLUMES, "Том");
+        fillSelect(ui.pageSelect, PAGES, "Страница");
+        makeRandomLocation();
+        bindEvents();
+      }
+
+      init();
+    })();
+  </script>
+</body>
+</html>
